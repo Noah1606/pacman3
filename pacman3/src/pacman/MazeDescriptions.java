@@ -3,6 +3,9 @@ package pacman;
 import java.util.Arrays;
 import java.util.Random;
 
+import pacman.wormholes.ArrivalPortal;
+import pacman.wormholes.DeparturePortal;
+
 public class MazeDescriptions {
 	
 	private MazeDescriptions() { throw new AssertionError("This class is not intended to be instantiated"); }
@@ -22,6 +25,12 @@ public class MazeDescriptions {
 		
 		int nbGhosts = 0;
 		Ghost[] ghosts = new Ghost[width * height];
+		
+		int nbDeparturePortals = 0;
+		DeparturePortal[] departurePortals = new DeparturePortal[width * height];
+		
+		int nbArrivalPortals = 0;
+		ArrivalPortal[] arrivalPortals = new ArrivalPortal[width * height];
 		
 		for (int row = 0; row < lines.length; row++) {
 			String line = lines[row];
@@ -49,6 +58,8 @@ public class MazeDescriptions {
 						throw new IllegalArgumentException("Maze description contains multiple P characters");
 					pacMan = new PacMan(3, Square.of(map, row, column));
 				}
+				case 'D' -> departurePortals[nbDeparturePortals++] = new DeparturePortal(Square.of(map, row, column));
+				case 'A' -> arrivalPortals[nbArrivalPortals++] = new ArrivalPortal(Square.of(map, row, column));
 				default -> throw new IllegalArgumentException("Invalid character in maze description: " + c);
 				}
 			}
@@ -57,7 +68,18 @@ public class MazeDescriptions {
 		if (pacMan == null)
 			throw new IllegalArgumentException("Maze description does not contain a P character");
 		
-		return new Maze(random, map, pacMan, Arrays.copyOf(ghosts, nbGhosts), Arrays.copyOf(foodItems, nbFoodItems));
+		Object[] objectDeparturePortals = Arrays.stream(departurePortals).filter(i -> i != null).toArray();
+		DeparturePortal[] filteredDeparturePortals = new DeparturePortal[objectDeparturePortals.length];
+		for(int i = 0; i < objectDeparturePortals.length; i++) {
+			filteredDeparturePortals[i] = (DeparturePortal)objectDeparturePortals[i];
+		}
+		Object[] objectArrivalPortals = Arrays.stream(arrivalPortals).filter(i -> i != null).toArray();
+		ArrivalPortal[] filteredArrivalPortals = new ArrivalPortal[objectArrivalPortals.length];
+		for(int i = 0; i < objectArrivalPortals.length; i++) {
+			filteredArrivalPortals[i] = (ArrivalPortal)objectArrivalPortals[i];
+		}
+		
+		return new Maze(random, map, pacMan, Arrays.copyOf(ghosts, nbGhosts), Arrays.copyOf(foodItems, nbFoodItems), filteredDeparturePortals, filteredArrivalPortals);
 	}
 
 }
