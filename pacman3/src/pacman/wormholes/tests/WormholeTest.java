@@ -31,10 +31,14 @@ class WormholeTest {
 		Square square1 = Square.of(mazemap,row,col);
 		Square square2 = Square.of(mazemap,3,0);
 		Square square3 = Square.of(mazemap, 3,1);
+		Square square4 = Square.of(mazemap,1,2);
+		
 		
 		DeparturePortal departureportal1 = new DeparturePortal(square1);
+		DeparturePortal departureportal2 = new DeparturePortal(square3);
 		ArrivalPortal arrivalportal1 = new ArrivalPortal(square2);
 		ArrivalPortal arrivalportal2= new ArrivalPortal(square3);
+		ArrivalPortal arrivalportal3 = new ArrivalPortal(square4);
 		
 		Wormhole wormhole = new Wormhole(departureportal1,arrivalportal1);
 		Wormhole wormhole2 = new Wormhole(departureportal1, arrivalportal2);
@@ -43,6 +47,26 @@ class WormholeTest {
 		assertEquals(Set.of(wormhole, wormhole2),departureportal1.getWormholes());
 		assertEquals(Set.of(wormhole),arrivalportal1.getWormholes());
 		assertEquals(Set.of(wormhole2), arrivalportal2.getWormholes());
+		assertEquals(arrivalportal1,wormhole.getArrivalPortal());
+		assertEquals(departureportal1,wormhole.getDeparturePortal());
+
+
+		wormhole.setDeparturePortal(departureportal2);
+		assertEquals(departureportal2, wormhole.getDeparturePortal());
+		
+		wormhole.setDeparturePortal(departureportal2);
+		assertEquals(departureportal2, wormhole.getDeparturePortal());
+		
+		wormhole.setArrivalPortal(arrivalportal1);
+		assertEquals(arrivalportal1, wormhole.getArrivalPortal());
+		wormhole.setArrivalPortal(arrivalportal2);
+		assertEquals(arrivalportal2, wormhole.getArrivalPortal());
+		wormhole.setArrivalPortal(arrivalportal2);
+		assertEquals(arrivalportal2, wormhole.getArrivalPortal());
+		wormhole.setArrivalPortal(arrivalportal3);
+		assertEquals(arrivalportal3, wormhole.getArrivalPortal());
+		
+		
 		
 	}
 
